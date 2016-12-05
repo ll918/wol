@@ -42,12 +42,10 @@ def wake_on_lan(mac_address):
     msg = b'\xff' * 6 + hwa * 16
 
     # Send packet to broadcast address using UDP port 9
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    for i in broadcast:
-        s.sendto(msg, (i, wol_port))
-    s.close()
-
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        for i in broadcast:
+            s.sendto(msg, (i, wol_port))
 
 if len(sys.argv) > 1:
     for i in range(1, len(sys.argv)):
