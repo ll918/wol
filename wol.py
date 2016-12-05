@@ -2,9 +2,9 @@
 """"
 Wake on LAN
 
-wol computer1
-wol computer1 computer2
-wol 00:11:22:33:44:55
+wol.py computer1
+wol.py computer1 computer2
+wol.py 00:11:22:33:44:55
 
 todo Use regex to check mac address validity
 todo use with for socket
