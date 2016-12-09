@@ -12,6 +12,7 @@ todo Test with a mac input
 todo better user input validation
 """
 import os
+import re
 import socket
 import struct
 import sys
@@ -27,13 +28,14 @@ def validate_mac(mac_address):
     """Gets a MAC address as a string, validate mac address format and returns
     True or False
     """
-    # todo use regex to validate
-    status = False
-    if len(mac_address) != 17:
-        print('Not a valid MAC address')
+    valid = False
+    r = re.compile('^' + r'[:]'.join(['([0-9a-f]{2})'] * 6) + '$',
+                   re.IGNORECASE)
+    if r.match(mac_address):
+        valid = True
     else:
-        status = True
-    return status
+        print('Not a valid MAC address')
+    return valid
 
 
 def build_magic_packet(mac_address):
@@ -59,12 +61,15 @@ def wake_on_lan(mac_address):
     """Gets a MAC address as a string then broadcast the magic packet using
     UDP port 9
     """
-    msg = build_magic_packet(mac_address)
-    if msg != '':
+    if validate_mac(mac_address) is True:
+        msg = build_magic_packet(mac_address)
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             for i in broadcast:
                 s.sendto(msg, (i, wol_port))
+        print('Waking up')
+    else:
+        pass
 
 
 if len(sys.argv) > 1:
@@ -72,16 +77,14 @@ if len(sys.argv) > 1:
         input = sys.argv[i]
         if ":" in input:
             # Wake up using MAC address
-            if validate_mac(input) is True:  # Validation should be moved
-                wake_on_lan(input)
-                print('Waking up', input)
+            wake_on_lan(input)
         else:
             # Wake up known computers
             if input in my_computers.keys():
                 wake_on_lan(my_computers[input])
-                print('Waking up', input)
+                # print('Waking up', input)
             else:
-                print('Unknown input', input)
+                print('Unknown machine:', input)
 else:
     print('No machine to wake. Use: wol.py input or wol.py'
           ' 00:11:22:33:44:55')
