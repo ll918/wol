@@ -5,11 +5,6 @@ Wake on LAN
 wol.py computer1
 wol.py computer1 computer2
 wol.py 00:11:22:33:44:55
-
-todo Use regex to check mac address validity
-todo use with for socket
-todo Test with a mac input
-todo better user input validation
 """
 import os
 import re
@@ -60,7 +55,7 @@ def build_magic_packet(mac_address):
 
 def wake_on_lan(mac_address):
     """Gets a MAC address as a string then broadcast the magic packet using
-    UDP port 9
+    UDP port 9.
     """
     if validate_mac(mac_address) is True:
         msg = build_magic_packet(mac_address)
@@ -83,9 +78,8 @@ if len(sys.argv) > 1:
             # Wake up known computers
             if input in my_computers.keys():
                 wake_on_lan(my_computers[input])
-                # print('Waking up', input)
             else:
                 print('Unknown machine:', input)
 else:
-    print('No machine to wake. Use: wol.py input or wol.py'
+    print('No machine to wake. Use: wol.py computer or wol.py'
           ' 00:11:22:33:44:55')
