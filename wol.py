@@ -16,6 +16,7 @@ broadcast = ['192.168.1.255', '192.168.0.255']
 wol_port = 9
 
 # The MAC address is stored in environment variables.
+# TODO: get my_computers from file. json?
 my_computers = {'dell5150': os.environ['dell5150'], 'imac': os.environ['imac']}
 
 
@@ -24,7 +25,7 @@ def validate_mac(mac_address):
     True or False
     """
     valid = False
-    # no need to compile just for one match?
+    # no need to compile just for one match
     r = re.compile('^' + '[:]'.join(['([0-9a-f]{2})'] * 6) + '$',
                    re.IGNORECASE)
     if r.match(mac_address):
@@ -57,7 +58,7 @@ def wake_on_lan(mac_address):
     """Gets a MAC address as a string then broadcast the magic packet using
     UDP port 9.
     """
-    if validate_mac(mac_address) is True:
+    if validate_mac(mac_address) is True:  # is the "is True" necessary?
         msg = build_magic_packet(mac_address)
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
