@@ -58,7 +58,7 @@ def wake_on_lan(mac_address):
     """Gets a MAC address as a string then broadcast the magic packet using
     UDP port 9.
     """
-    if validate_mac(mac_address) is True:  # is the "is True" necessary?
+    if validate_mac(mac_address):
         msg = build_magic_packet(mac_address)
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -66,7 +66,7 @@ def wake_on_lan(mac_address):
                 s.sendto(msg, (i, wol_port))
         print('Waking up')
     else:
-        pass
+        print('Invalid MAC address.')
 
 
 if len(sys.argv) > 1:
