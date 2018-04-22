@@ -21,6 +21,7 @@ def validate_mac(mac_address):
     True or False
     """
     valid = False
+
     # no need to compile just for one match
     r = re.compile('^' + '[:]'.join(['([0-9a-f]{2})'] * 6) + '$',
                    re.IGNORECASE)
