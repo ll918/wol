@@ -70,17 +70,16 @@ def wake_on_lan(mac_address):
 
 
 if len(sys.argv) > 1:
-    for i in range(1, len(sys.argv)):
-        input = sys.argv[i]
-        if ":" in input:
-            # Wake up using MAC address
-            wake_on_lan(input)
+    input = sys.argv[1]
+    if ":" in input:
+        # Wake up using MAC address
+        wake_on_lan(input)
+    else:
+        # Wake up known computers
+        if input in my_computers:
+            wake_on_lan(my_computers[input])
         else:
-            # Wake up known computers
-            if input in my_computers.keys():
-                wake_on_lan(my_computers[input])
-            else:
-                print('Unknown machine:', input)
+            print('Unknown machine:', input)
 else:
     print('No machine to wake. Use: wol.py computer or wol.py'
           ' 00:11:22:33:44:55')
