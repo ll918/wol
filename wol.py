@@ -2,8 +2,8 @@
 """"
 Wake on LAN
 
+Usage:
 wol.py computer1
-wol.py computer1 computer2
 wol.py 00:11:22:33:44:55
 """
 import os
@@ -13,7 +13,6 @@ import struct
 import sys
 
 # The MAC address is stored in environment variables.
-# TODO: get my_computers from file. json?
 my_computers = {'dell5150': os.environ['dell5150'], 'imac': os.environ['imac']}
 
 
@@ -36,7 +35,7 @@ def build_magic_packet(mac_address):
     """Gets a MAC address as a string and return the wol magic packet as a
      string.
     """
-    msg = ''
+
     # Build the 6 Bytes(octets) hardware address
     add_oct = mac_address.split(':')
     hwa = struct.pack('BBBBBB',
@@ -46,6 +45,7 @@ def build_magic_packet(mac_address):
                       int(add_oct[3], 16),
                       int(add_oct[4], 16),
                       int(add_oct[5], 16))
+
     # Build the magic packet
     msg = b'\xff' * 6 + hwa * 16
     return msg
