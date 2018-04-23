@@ -2,6 +2,10 @@
 """"
 Wake on LAN
 
+
+The MAC addresses are stored in environment variables associated with the name
+of a machine.
+
 Usage:
 wol.py computer1
 wol.py 00:11:22:33:44:55
@@ -12,9 +16,6 @@ import socket
 import struct
 import sys
 
-# The MAC address is stored in environment variables.
-my_computers = {'dell5150': os.environ['dell5150'], 'imac': os.environ['imac']}
-
 
 def validate_mac(mac_address):
     """Gets a MAC address as a string, validate mac address format and returns
@@ -22,7 +23,7 @@ def validate_mac(mac_address):
     """
     valid = False
 
-    # no need to compile just for one match
+    # no need to compile just for one match. Do it anyway.
     r = re.compile('^' + '[:]'.join(['([0-9a-f]{2})'] * 6) + '$',
                    re.IGNORECASE)
     if r.match(mac_address):
@@ -77,10 +78,7 @@ if len(sys.argv) > 1:
         wake_on_lan(input)
     else:
         # Wake up known computers
-        if input in my_computers:
-            wake_on_lan(my_computers[input])
-        else:
-            print('Unknown machine:', input)
+        wake_on_lan(os.getenv(input, ''))
 else:
     print('No machine to wake. Use: wol.py computer or wol.py'
           ' 00:11:22:33:44:55')
